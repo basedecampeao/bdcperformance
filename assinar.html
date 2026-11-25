@@ -229,13 +229,13 @@ var LEAD_ENDPOINT = "https://formspree.io/f/xgakdnjo";
 var CHECKOUT = {
   mensal:     "https://mpago.la/2ZcQpEE",
   trimestral: "https://mpago.li/2spKyQy",
-  black:      "https://mpago.li/16RteJG"
+  lancamento: "https://mpago.li/16RteJG"
 };
 
 var WHATSAPP = "5551996917344";
 
 var PLANOS = {
-  black:      { nome:"Ciclo de 90 dias · Black Friday", valor:197, per:"no ciclo",
+  lancamento: { nome:"Ciclo de 90 dias · turma de lançamento", valor:197, per:"no ciclo",
                 nota:"De R$597 por R$197, ou 3x de R$65,67 sem juros. Somente 20 vagas.",
                 outro:"mensal", troca:"Prefiro o plano mensal de R$199" },
   trimestral: { nome:"Ciclo de 90 dias", valor:597, per:"/ trimestre",
@@ -257,7 +257,7 @@ for (var i = 6; i <= 40; i++) {
 /* ---- plano escolhido ---- */
 function qs(k){ return new URLSearchParams(location.search).get(k); }
 var plano = PLANOS.hasOwnProperty(qs('plano')) ? qs('plano') : 'trimestral';
-if (plano === 'black') { PLANOS.mensal.outro = 'black'; PLANOS.mensal.troca = 'Voltar para a condição de Black Friday'; }
+if (plano === 'lancamento') { PLANOS.mensal.outro = 'lancamento'; PLANOS.mensal.troca = 'Voltar para a condição de lançamento'; }
 
 function pintar(){
   var p = PLANOS[plano];
@@ -349,7 +349,7 @@ document.getElementById('lead').addEventListener('submit', function(e){
     if (!destino) {
       // sem link de pagamento configurado: manda para o WhatsApp em vez de perder a venda
       destino = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(
-        'Oi! Quero garantir uma vaga da Black Friday do BDC Performance.\n' +
+        'Oi! Quero garantir uma vaga da turma de lançamento do BDC Performance.\n' +
         'Responsável: ' + d.responsavel + '\nAtleta: ' + d.atleta + ', ' + d.idade + ' anos');
     }
     window.location.href = destino;

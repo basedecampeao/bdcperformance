@@ -23,8 +23,8 @@ No DNS do domínio, criar um CNAME do subdomínio para `cname.vercel-dns.com`.
 |---|---|
 | `index.html` | A landing page inteira. CSS e JS embutidos, sem framework. |
 | `assinar.html` | Página de captação. Coleta os dados antes de mandar para o pagamento. |
-| `black.html` | Landing page da Black Friday, em `/black`. Mesma estrutura, oferta diferente. |
-| `og-black-friday.jpg` | Imagem de compartilhamento da página da Black. |
+| `lancamento.html` | Landing page da oferta de lançamento, em `/lancamento`. Mesma estrutura, oferta diferente. |
+| `og-lancamento.jpg` | Imagem de compartilhamento da página de lançamento. |
 | `vercel.json` | URLs limpas, cabeçalhos de segurança e cache. |
 | `logo.png` | Logo oficial do Base de Campeão, fundo transparente. |
 | `og-bdc-performance.jpg` | Imagem 1200x630 do preview no WhatsApp e nas redes. |
@@ -43,12 +43,12 @@ No DNS do domínio, criar um CNAME do subdomínio para `cname.vercel-dns.com`.
 3. **Fluxo pós-pagamento.** No Mercado Pago, configurar a URL de retorno de pagamento
    aprovado apontando para o link do questionário de anamnese.
 
-## Black Friday
+## Oferta de lançamento
 
-A página da campanha fica em `/black` e vive junto com a padrão, no mesmo deploy.
+A página da campanha fica em `/lancamento` e vive junto com a padrão, no mesmo deploy.
 A padrão (`index.html`) continua intacta, vendendo R$199 por mês e R$597 no trimestre.
 
-Oferta da Black, só no ciclo trimestral:
+Oferta de lançamento, só no ciclo trimestral:
 
 - R$197 no ciclo de 90 dias, de R$597, ou 3x de R$65,67 sem juros
 - Somente 20 vagas
@@ -56,20 +56,13 @@ Oferta da Black, só no ciclo trimestral:
 
 ### Atualizar as vagas vendidas
 
-No fim de `black.html`, uma linha só:
+No fim de `lancamento.html`, uma linha só:
 
     var VAGAS = { total: 20, vendidas: 0 };
 
 Mude `vendidas` conforme as assinaturas entram. A barra de progresso, os dois contadores
 e a tarja do topo se ajustam sozinhos. Chegando em 20, a página troca para esgotado
 e os botões passam a apontar para o ciclo normal de R$597, sem precisar mexer em mais nada.
-
-### Falta o link de pagamento da Black
-
-Em `assinar.html`, no objeto `CHECKOUT`, o campo `black` está vazio.
-É preciso criar no Mercado Pago um link de R$197 em até 3x sem juros e colar ali.
-Enquanto estiver vazio, quem escolher a condição de Black é levado ao WhatsApp
-com os dados já preenchidos, em vez de ir para um checkout com o valor errado.
 
 ## Fluxo de assinatura
 
@@ -105,7 +98,7 @@ Três coisas a saber:
 1. **O primeiro envio precisa ser confirmado.** O Formspree manda um e-mail de ativação
    no primeiro recebimento. Faça um envio de teste antes de divulgar a página.
 2. **O plano gratuito tem limite mensal de envios.** Se a campanha passar disso,
-   os envios seguintes são bloqueados. Vale acompanhar o painel durante a Black.
+   os envios seguintes são bloqueados. Vale acompanhar o painel durante a campanha.
 3. **O envio nunca trava a venda.** Se o Formspree demorar ou falhar, depois de
    2,5 segundos o cliente é mandado para o pagamento do mesmo jeito, e o lead fica
    salvo no navegador dele. Trocar de serviço depois é só trocar a URL:
