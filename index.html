@@ -24,7 +24,17 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="/favicon.ico">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#090B0E">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
+j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})
+(window,document,'script','dataLayer','GTM-TM8VZL7R');</script>
+<!-- End Google Tag Manager -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
@@ -111,11 +121,7 @@ header{
 }
 .hd{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
 .brand{display:flex;align-items:center;gap:10px}
-.mark{
-  width:40px;height:40px;border-radius:12px;background:var(--volt);color:#090B0E;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.02em;
-}
+.mark{width:40px;height:40px;border-radius:12px;display:block;object-fit:contain}
 .brand b{display:block;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;
   font-size:1.25rem;font-weight:800;line-height:1;letter-spacing:.03em}
 .brand span{display:block;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:3px}
@@ -413,11 +419,13 @@ footer{background:var(--bg);padding:38px 0;font-size:.8rem;color:var(--dim);bord
 </style>
 </head>
 <body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TM8VZL7R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header>
   <div class="wrap hd">
     <a href="#" class="brand">
-      <div class="mark">BDC</div>
+      <img src="/logo.svg" alt="Base de Campeão" class="mark" width="40" height="40">
       <div>
         <b>BDC <span style="color:var(--volt);display:inline">Performance</span></b>
         <span>Base de Campeão</span>
@@ -1181,7 +1189,7 @@ footer{background:var(--bg);padding:38px 0;font-size:.8rem;color:var(--dim);bord
           <div class="price">
             <span class="cur">R$</span><span class="num2 volt">597</span><span class="per">/ trimestre</span>
           </div>
-          <p style="font-size:.78rem;color:var(--muted)">Equivale a R$ 199 por mês. Pagamento pela Hotmart.</p>
+          <p style="font-size:.78rem;color:var(--muted)">Equivale a R$ 199 por mês. Pagamento pelo Mercado Pago.</p>
           <div class="hr"></div>
 
           <ul>
@@ -1322,7 +1330,7 @@ footer{background:var(--bg);padding:38px 0;font-size:.8rem;color:var(--dim);bord
 <footer>
   <div class="wrap ft">
     <div class="brand">
-      <div class="mark" style="width:32px;height:32px;font-size:.95rem;border-radius:9px">BDC</div>
+      <img src="/logo.svg" alt="Base de Campeão" width="32" height="32" style="border-radius:9px">
       <div>
         <b style="font-size:1rem">BDC Performance</b>
         <span>Base de Campeão</span>
@@ -1349,22 +1357,24 @@ footer{background:var(--bg);padding:38px 0;font-size:.8rem;color:var(--dim);bord
 
 <script>
 /* =============================================================
-   CHECKOUT HOTMART
-   TROCAR: cole aqui os dois links de checkout. Enquanto estiverem
-   vazios, o botão avisa que o link ainda não foi configurado.
-   Depois do pagamento, configure na Hotmart o redirecionamento
-   para o link do questionário de anamnese.
+   CHECKOUT MERCADO PAGO
+   Depois do pagamento aprovado, configure no Mercado Pago a URL de
+   retorno apontando para o link do questionário de anamnese.
    ============================================================= */
 var CHECKOUT = {
-  mensal:     "", // ex.: https://pay.hotmart.com/XXXXXXX?off=aaaaaaa
-  trimestral: ""  // ex.: https://pay.hotmart.com/XXXXXXX?off=bbbbbbb
+  mensal:     "https://mpago.la/2ZcQpEE",
+  trimestral: "https://mpago.li/2spKyQy"
 };
 
 document.querySelectorAll('[data-checkout]').forEach(function(el){
   el.addEventListener('click', function(e){
-    var link = CHECKOUT[el.getAttribute('data-checkout')];
-    if (link) { window.location.href = link; }
-    else { e.preventDefault(); alert('Link de checkout ainda não configurado.'); }
+    var plano = el.getAttribute('data-checkout');
+    var link = CHECKOUT[plano];
+    e.preventDefault();
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'inicio_checkout', plano: plano,
+      valor: plano === 'trimestral' ? 597 : 199, moeda: 'BRL' });
+    if (link) { setTimeout(function(){ window.location.href = link; }, 150); }
   });
 });
 
@@ -1378,7 +1388,7 @@ document.querySelectorAll('details').forEach(function(d){
 });
 </script>
 
-<!-- TROCAR: Meta Pixel / Google Analytics entram aqui, antes do </body> -->
+<!-- Meta Pixel e GA4 entram pelo contêiner do GTM (GTM-TM8VZL7R), não aqui. -->
 
 </body>
 </html>

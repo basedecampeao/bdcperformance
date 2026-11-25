@@ -1,0 +1,7 @@
+<!-- PLACEHOLDER. Substituir pelo logo oficial do Base de Campeão,
+     mantendo o nome do arquivo assets/logo.svg. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Base de Campeão">
+  <rect width="120" height="120" rx="27" fill="#C6F806"/>
+  <text x="60" y="76" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif"
+        font-size="46" font-weight="800" fill="#090B0E" letter-spacing="-1">BDC</text>
+</svg>
