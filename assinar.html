@@ -220,20 +220,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 /* =============================================================
    PARA ONDE VÃO OS LEADS
-   Cole abaixo a URL do webhook que vai receber os dados.
-   O README explica como gerar uma em 10 minutos com o Google
-   Apps Script, gravando direto numa planilha.
-   Com o campo vazio, o lead ainda vai para o dataLayer do GTM
-   e fica salvo no navegador, mas NÃO chega até você.
+   Formspree. Cada envio chega por e-mail e fica registrado no
+   painel do Formspree. Trocar de serviço depois é só trocar a URL:
+   o envio é um POST em JSON, que qualquer webhook aceita.
    ============================================================= */
-var LEAD_ENDPOINT = "";
+var LEAD_ENDPOINT = "https://formspree.io/f/xgakdnjo";
 
 var CHECKOUT = {
   mensal:     "https://mpago.la/2ZcQpEE",
-  trimestral: "https://mpago.li/2spKyQy"
+  trimestral: "https://mpago.li/2spKyQy",
+  black:      "https://mpago.li/16RteJG"
 };
 
+var WHATSAPP = "5551996917344";
+
 var PLANOS = {
+  black:      { nome:"Ciclo de 90 dias · Black Friday", valor:197, per:"no ciclo",
+                nota:"De R$597 por R$197, ou 3x de R$65,67 sem juros. Somente 20 vagas.",
+                outro:"mensal", troca:"Prefiro o plano mensal de R$199" },
   trimestral: { nome:"Ciclo de 90 dias", valor:597, per:"/ trimestre",
                 nota:"Pagamento único. Equivale a R$ 199 por mês.", outro:"mensal",
                 troca:"Trocar para o plano mensal" },
@@ -252,7 +256,8 @@ for (var i = 6; i <= 40; i++) {
 
 /* ---- plano escolhido ---- */
 function qs(k){ return new URLSearchParams(location.search).get(k); }
-var plano = (qs('plano') === 'mensal') ? 'mensal' : 'trimestral';
+var plano = PLANOS.hasOwnProperty(qs('plano')) ? qs('plano') : 'trimestral';
+if (plano === 'black') { PLANOS.mensal.outro = 'black'; PLANOS.mensal.troca = 'Voltar para a condição de Black Friday'; }
 
 function pintar(){
   var p = PLANOS[plano];
@@ -304,6 +309,8 @@ function validar(d){
 }
 
 /* ---- envio ---- */
+var seguiu = false;
+
 document.getElementById('lead').addEventListener('submit', function(e){
   e.preventDefault();
 
@@ -335,15 +342,46 @@ document.getElementById('lead').addEventListener('submit', function(e){
 
   try { localStorage.setItem('bdc_lead', JSON.stringify(d)); } catch(err){}
 
-  function seguir(){ window.location.href = CHECKOUT[plano]; }
+  function seguir(){
+    if (seguiu) return;          // não redireciona duas vezes
+    seguiu = true;
+    var destino = CHECKOUT[plano];
+    if (!destino) {
+      // sem link de pagamento configurado: manda para o WhatsApp em vez de perder a venda
+      destino = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(
+        'Oi! Quero garantir uma vaga da Black Friday do BDC Performance.\n' +
+        'Responsável: ' + d.responsavel + '\nAtleta: ' + d.atleta + ', ' + d.idade + ' anos');
+    }
+    window.location.href = destino;
+  }
 
   if (LEAD_ENDPOINT) {
+    // Campos com nome legível: é assim que aparecem no e-mail do Formspree.
+    var envio = {
+      _subject:      'Lead BDC Performance: ' + d.atleta + ', ' + d.idade + ' anos',
+      email:         d.email,                       // Formspree usa como responder-para
+      'Responsável': d.responsavel,
+      'WhatsApp':    d.whatsapp || 'não informado',
+      'E-mail':      d.email    || 'não informado',
+      'Atleta':      d.atleta,
+      'Idade':       d.idade + ' anos',
+      'Plano':       PLANOS[plano].nome,
+      'Valor':       'R$ ' + PLANOS[plano].valor,
+      'Origem':      d.origem
+    };
+
     fetch(LEAD_ENDPOINT, {
-      method:'POST', mode:'no-cors', keepalive:true,
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(d)
-    }).then(seguir).catch(seguir);
-    setTimeout(seguir, 2500); // não deixa o cliente preso se o webhook demorar
+      method:'POST', keepalive:true,
+      headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+      body: JSON.stringify(envio)
+    })
+    .then(function(r){
+      if (!r.ok) console.warn('Formspree respondeu', r.status);
+      seguir();
+    })
+    .catch(function(err){ console.warn('Falha ao enviar o lead:', err); seguir(); });
+
+    setTimeout(seguir, 2500);   // a venda nunca espera o formulário
   } else {
     setTimeout(seguir, 200);
   }

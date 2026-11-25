@@ -6,6 +6,11 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://bdcperformance.basedecampeao.com.br/black</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://bdcperformance.basedecampeao.com.br/politica-de-privacidade</loc>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
