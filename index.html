@@ -121,7 +121,7 @@ header{
 }
 .hd{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
 .brand{display:flex;align-items:center;gap:10px}
-.mark{width:40px;height:40px;border-radius:12px;display:block;object-fit:contain}
+.mark{height:46px;width:auto;display:block}
 .brand b{display:block;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;
   font-size:1.25rem;font-weight:800;line-height:1;letter-spacing:.03em}
 .brand span{display:block;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:3px}
@@ -425,7 +425,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <header>
   <div class="wrap hd">
     <a href="#" class="brand">
-      <img src="/logo.svg" alt="Base de Campeão" class="mark" width="40" height="40">
+      <img src="/logo.png" alt="Base de Campeão" class="mark" width="46" height="46">
       <div>
         <b>BDC <span style="color:var(--volt);display:inline">Performance</span></b>
         <span>Base de Campeão</span>
@@ -1173,7 +1173,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Suporte no WhatsApp e revisão a cada 90 dias</li>
           </ul>
         </div>
-        <a href="#" data-checkout="mensal" class="btn btn-outline btn-full">Assinar o plano mensal</a>
+        <a href="/assinar?plano=mensal" data-checkout="mensal" class="btn btn-outline btn-full">Assinar o plano mensal</a>
       </div>
 
       <div class="plan feat">
@@ -1199,7 +1199,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Revisão completa ao fim dos 90 dias</li>
           </ul>
         </div>
-        <a href="#" data-checkout="trimestral" class="btn btn-primary btn-full">Garantir o ciclo de 90 dias</a>
+        <a href="/assinar?plano=trimestral" data-checkout="trimestral" class="btn btn-primary btn-full">Garantir o ciclo de 90 dias</a>
       </div>
     </div>
 
@@ -1330,7 +1330,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <footer>
   <div class="wrap ft">
     <div class="brand">
-      <img src="/logo.svg" alt="Base de Campeão" width="32" height="32" style="border-radius:9px">
+      <img src="/logo.png" alt="Base de Campeão" width="38" height="38" style="height:38px;width:auto">
       <div>
         <b style="font-size:1rem">BDC Performance</b>
         <span>Base de Campeão</span>
@@ -1357,24 +1357,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script>
 /* =============================================================
-   CHECKOUT MERCADO PAGO
-   Depois do pagamento aprovado, configure no Mercado Pago a URL de
-   retorno apontando para o link do questionário de anamnese.
+   FLUXO DE ASSINATURA
+   Os botões levam para /assinar, que coleta os dados do responsável
+   e do atleta antes de mandar para o Mercado Pago. Os links de
+   pagamento ficam em assinar.html, não aqui.
    ============================================================= */
-var CHECKOUT = {
-  mensal:     "https://mpago.la/2ZcQpEE",
-  trimestral: "https://mpago.li/2spKyQy"
-};
-
 document.querySelectorAll('[data-checkout]').forEach(function(el){
-  el.addEventListener('click', function(e){
+  el.addEventListener('click', function(){
     var plano = el.getAttribute('data-checkout');
-    var link = CHECKOUT[plano];
-    e.preventDefault();
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: 'inicio_checkout', plano: plano,
       valor: plano === 'trimestral' ? 597 : 199, moeda: 'BRL' });
-    if (link) { setTimeout(function(){ window.location.href = link; }, 150); }
   });
 });
 
